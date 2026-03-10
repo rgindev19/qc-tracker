@@ -1,0 +1,116 @@
+.timerWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.label {
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111827;
+}
+
+.timerBox {
+  border: 5px solid #111827;
+  padding: 24px;
+  font-size: 4rem;
+  font-weight: 900;
+  text-align: center;
+  box-shadow: 8px 8px 0px 0px #111827;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  transition: background-color 0.3s ease;
+  font-variant-numeric: tabular-nums; /* Keeps the numbers from jumping around */
+}
+
+/* Status Colors */
+.safe {
+  background-color: #fff;
+  color: #111827;
+}
+
+.warning {
+  background-color: #fef08a; /* Turns yellow at 80% time used */
+  color: #111827;
+}
+
+.breached {
+  background-color: #fca5a5;
+  color: #7f1d1d;
+  border-color: #7f1d1d;
+  /* The Alarm Animation */
+  animation: alarmPulse 0.5s infinite alternate; 
+}
+
+.completed {
+  background-color: #e5e7eb;
+  color: #6b7280;
+  box-shadow: 4px 4px 0px 0px #111827;
+}
+
+/* This makes the box aggressively jump forward and change shadow colors */
+@keyframes alarmPulse {
+  0% { 
+    box-shadow: 8px 8px 0px 0px #7f1d1d; 
+    transform: translate(0, 0); 
+  }
+  100% { 
+    box-shadow: 16px 16px 0px 0px #dc2626; 
+    transform: translate(-4px, -4px); 
+  }
+}
+
+.audioControls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.alarmBtn {
+  font-family: inherit;
+  font-weight: 900;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 3px solid #111827;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px 0px #111827;
+  transition: all 0.1s;
+}
+
+.alarmBtn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px 0px #111827;
+}
+
+.alarmMuted {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.alarmArmed {
+  background-color: #ef4444; /* Red */
+  color: #fff;
+  animation: pulseArmed 2s infinite;
+}
+
+@keyframes pulseArmed {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+/* Responsive adjustments for Mobile & Tablets */
+@media (max-width: 768px) {
+  .timerBox {
+    font-size: 2.5rem; /* Shrunk from 4rem */
+    padding: 16px;
+    letter-spacing: 2px;
+  }
+  .alarmBtn {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+}

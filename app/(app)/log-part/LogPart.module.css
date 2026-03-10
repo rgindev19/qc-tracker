@@ -1,0 +1,165 @@
+.container {
+  max-width: 800px;
+  margin: 64px auto;
+  padding: 32px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.header {
+  margin-bottom: 40px;
+  border-bottom: 6px solid #111827;
+  padding-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111827;
+  margin: 0;
+  line-height: 1;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #4b5563;
+  margin: 0;
+}
+
+/* The thick Neobrutalist box wrapping the form */
+.formBox {
+  background-color: #fff;
+  border: 4px solid #111827;
+  padding: 40px;
+  box-shadow: 12px 12px 0px 0px #111827;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+/* Forces labels to sit ABOVE inputs */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.label {
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #111827;
+}
+
+.input {
+  border: 3px solid #111827;
+  padding: 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  font-family: inherit;
+  background-color: #f3f4f6;
+  transition: all 0.1s;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  background-color: #fff;
+  transform: translate(-4px, -4px);
+  box-shadow: 6px 6px 0px 0px #111827;
+  border-color: #2563eb;
+}
+
+.select {
+  border: 3px solid #111827;
+  padding: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-family: inherit;
+  background-color: #fef08a; /* Bright yellow to highlight the TAT */
+  cursor: pointer;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.select:focus {
+  background-color: #fff;
+  transform: translate(-4px, -4px);
+  box-shadow: 6px 6px 0px 0px #111827;
+}
+
+.submitBtn {
+  background-color: #2563eb; /* Industrial Blue */
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  padding: 24px;
+  border: 4px solid #111827;
+  box-shadow: 8px 8px 0px 0px #111827;
+  cursor: pointer;
+  transition: all 0.1s;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.submitBtn:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px 0px #111827;
+}
+
+.submitBtn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 4px 4px 0px 0px #111827;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 24px;
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+  border-bottom: 3px solid #111827;
+  padding-bottom: 2px;
+}
+
+.backLink:hover {
+  background-color: #f3f4f6;
+}
+
+/* Responsive adjustments for Mobile & Tablets */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+    margin: 24px auto;
+  }
+  .title {
+    font-size: 2.25rem;
+  }
+  .formBox {
+    padding: 24px;
+    gap: 24px;
+  }
+  /* Stacks the 2-column grid into a single column */
+  .inputRow {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .input, .select, .submitBtn {
+    padding: 12px;
+    font-size: 1.1rem;
+  }
+}
