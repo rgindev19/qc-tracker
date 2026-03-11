@@ -36,7 +36,7 @@ export async function syncOfflineQueue() {
     for (let i = 0; i < queue.length; i++) {
       const report = queue[i];
       
-      const response = await fetch('/api/tat-reports', {
+      const response = await fetch('/api/Inspections', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(report),

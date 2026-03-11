@@ -10,30 +10,24 @@ import { saveToOfflineQueue } from '../offlineSync';
 export default function LogPartPage() {
   const router = useRouter();
 
-  const handleLogPart = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleLogPart = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   
-  // 1. Grab the raw form data
-  const formData = new FormData(e.currentTarget);
-  
-  // 2. Convert it into a clean JavaScript object so it can be saved/sent easily
+  // 1. SAVE THE FORM REFERENCE IMMEDIATELY
+  const form = e.currentTarget; 
+  const formData = new FormData(form);
   const reportData = Object.fromEntries(formData.entries());
 
-  // 3. The Offline Check: Is the factory Wi-Fi down?
   if (!navigator.onLine) {
     await saveToOfflineQueue(reportData);
     alert("You are offline! Report saved to your device and will sync later.");
-    
-    // Reset the form so they can enter the next part
-    e.currentTarget.reset(); 
+    form.reset(); // Use the saved reference!
     return;
   }
 
-  // 4. The Online Attempt: Try sending it to the server
   try {
-    // NOTE: If you are using Payload CMS local API or Server Actions, 
-    // you might replace this fetch with your specific server function!
-    const response = await fetch('/api/tat-reports', {
+    // 2. UPDATE THIS URL to match your Payload collection slug!
+    const response = await fetch('/api/YOUR_ACTUAL_COLLECTION_NAME', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(reportData),
@@ -42,15 +36,12 @@ export default function LogPartPage() {
     if (!response.ok) throw new Error("Server rejected the submission");
     
     alert("Report submitted successfully!");
-    
-    // Redirect the inspector back to the main dashboard or reset the form
-    router.push('/'); 
+    // router.push('/'); // Uncomment this if you want it to redirect
 
   } catch (error) {
-    // 5. The Failsafe: If the Wi-Fi drops the exact millisecond they hit submit
     await saveToOfflineQueue(reportData);
     alert("Network error! Report saved to your device and will sync later.");
-    e.currentTarget.reset();
+    form.reset(); // Use the saved reference!
   }
 };
 
