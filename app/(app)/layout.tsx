@@ -23,18 +23,15 @@ export const metadata: Metadata = {
   manifest: "/manifest.json", // Add this specific line
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-  <body>
-    {/* Now it is safely inside the body where a <div> is allowed */}
-    <QueueStatus />
-    {children}
-  </body>
-</html>
+      <body>
+        {/* The indicator must be inside the body tag! */}
+        <QueueStatus /> 
+        
+        {children}
+      </body>
+    </html>
   );
 }
