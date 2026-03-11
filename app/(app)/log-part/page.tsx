@@ -5,32 +5,54 @@ import { useRouter } from 'next/navigation';
 // If you built the server action earlier, uncomment the line below:
 import { createInspection } from './actions'; 
 import styles from './LogPart.module.css';
+import { saveToOfflineQueue } from '../offlineSync';
 
 export default function LogPartPage() {
   const router = useRouter();
 
   const handleLogPart = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+  e.preventDefault();
+  
+  // 1. Grab the raw form data
+  const formData = new FormData(e.currentTarget);
+  
+  // 2. Convert it into a clean JavaScript object so it can be saved/sent easily
+  const reportData = Object.fromEntries(formData.entries());
+
+  // 3. The Offline Check: Is the factory Wi-Fi down?
+  if (!navigator.onLine) {
+    await saveToOfflineQueue(reportData);
+    alert("You are offline! Report saved to your device and will sync later.");
     
-    const inspectionData = {
-      jobNo: formData.get('jobNo') as string,
-      partName: formData.get('partName') as string,
-      quantity: Number(formData.get('quantity')),
-      targetTatHours: Number(formData.get('targetTatHours')),
-    };
+    // Reset the form so they can enter the next part
+    e.currentTarget.reset(); 
+    return;
+  }
 
-    // 2. Send it to the backend Server Action
-    const result = await createInspection(inspectionData);
+  // 4. The Online Attempt: Try sending it to the server
+  try {
+    // NOTE: If you are using Payload CMS local API or Server Actions, 
+    // you might replace this fetch with your specific server function!
+    const response = await fetch('/api/tat-reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(reportData),
+    });
 
-    // 3. Handle the result
-    if (result.success) {
-      alert(`Job ${inspectionData.jobNo} logged! The 2-hour clock has started.`);
-      router.push('/'); // Send the user back to the dashboard
-    } else {
-      alert("Error: Could not save the inspection. Check your terminal for errors.");
-    }
-  };
+    if (!response.ok) throw new Error("Server rejected the submission");
+    
+    alert("Report submitted successfully!");
+    
+    // Redirect the inspector back to the main dashboard or reset the form
+    router.push('/'); 
+
+  } catch (error) {
+    // 5. The Failsafe: If the Wi-Fi drops the exact millisecond they hit submit
+    await saveToOfflineQueue(reportData);
+    alert("Network error! Report saved to your device and will sync later.");
+    e.currentTarget.reset();
+  }
+};
 
   return (
     <main className={styles.container}>

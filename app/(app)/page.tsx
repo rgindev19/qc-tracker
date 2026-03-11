@@ -1,7 +1,11 @@
+"use client";
+import { useEffect } from 'react';
+import { syncOfflineQueue } from './offlineSync';
 import styles from '@/app/(app)/page.module.css';
 import Link from 'next/link';
 import { getPayload } from 'payload';
 import configPromise from '@payload-config';
+import QueueStatus from './QueueStatus'; // Adjust the relative path depending on where you saved it!
 
 // CRUCIAL: Forces the page to fetch fresh data and recalculate time on every single load
 export const dynamic = 'force-dynamic';
@@ -18,6 +22,28 @@ const formatStatus = (status: string) => {
 };
 
 export default async function QCDashboard() {
+  
+  useEffect(() => {
+    // Listen for the internet to come back
+    const handleOnline = () => {
+      console.log("Internet restored! Syncing data...");
+      syncOfflineQueue();
+      alert("Internet connection restored. Offline reports synced!");
+    };
+
+    window.addEventListener('online', handleOnline);
+
+    // Run it once on load just in case they reloaded the page while offline
+    if (navigator.onLine) {
+      syncOfflineQueue();
+    }
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+    };
+  }, []);
+  
+  
   // 1. Initialize Payload
   const payload = await getPayload({ config: configPromise });
 
@@ -35,6 +61,9 @@ export default async function QCDashboard() {
     <main className={styles.container}>
       
 <header className={styles.header}>
+
+  {/* The new indicator will sit on the right side of the header */}
+  <QueueStatus />
         <div>
           <h1 className={styles.title}>QC Control Center</h1>
           <p style={{ fontSize: '1.25rem', fontWeight: 600, color: '#4b5563', marginTop: '8px' }}>
