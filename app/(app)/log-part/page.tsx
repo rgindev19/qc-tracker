@@ -5,8 +5,6 @@ import { useRouter } from 'next/navigation';
 // If you built the server action earlier, uncomment the line below:
 import { createInspection } from './actions'; 
 import styles from './LogPart.module.css';
-import { saveToOfflineQueue } from '../offlineSync';
-
 export default function LogPartPage() {
   const router = useRouter();
 
