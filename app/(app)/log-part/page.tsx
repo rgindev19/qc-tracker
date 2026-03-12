@@ -10,39 +10,28 @@ import { saveToOfflineQueue } from '../offlineSync';
 export default function LogPartPage() {
   const router = useRouter();
 
-const handleLogPart = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleLogPart = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   
-  // 1. SAVE THE FORM REFERENCE IMMEDIATELY
-  const form = e.currentTarget; 
+  const form = e.currentTarget;
   const formData = new FormData(form);
   const reportData = Object.fromEntries(formData.entries());
 
-  if (!navigator.onLine) {
-    await saveToOfflineQueue(reportData);
-    alert("You are offline! Report saved to your device and will sync later.");
-    form.reset(); // Use the saved reference!
-    return;
-  }
+  // Automatically stamp the exact date and time the part was logged
+  reportData.timestamp = new Date().toLocaleString();
 
-  try {
-    // 2. UPDATE THIS URL to match your Payload collection slug!
-    const response = await fetch('/api/YOUR_ACTUAL_COLLECTION_NAME', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(reportData),
-    });
+  // 1. Grab any existing reports from the tablet's memory, or start an empty list
+  const existingData = JSON.parse(localStorage.getItem('qc_reports') || '[]');
+  
+  // 2. Add the brand new report to the list
+  existingData.push(reportData);
+  
+  // 3. Save the updated list permanently back into the tablet's memory
+  localStorage.setItem('qc_reports', JSON.stringify(existingData));
 
-    if (!response.ok) throw new Error("Server rejected the submission");
-    
-    alert("Report submitted successfully!");
-    // router.push('/'); // Uncomment this if you want it to redirect
-
-  } catch (error) {
-    await saveToOfflineQueue(reportData);
-    alert("Network error! Report saved to your device and will sync later.");
-    form.reset(); // Use the saved reference!
-  }
+  // Instantly reset the form for the next part
+  alert("Report saved safely to this device!");
+  form.reset(); 
 };
 
   return (
